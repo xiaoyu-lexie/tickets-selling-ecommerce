@@ -1,14 +1,44 @@
 import express from 'express'
+require('express-async-errors');
 import {json} from 'body-parser'
+import mongoose from 'mongoose';
+
+import {currentUserRouter} from './routes/current-user'
+import { signinRouter } from './routes/signin';
+import { signoutRouter } from './routes/signout';
+import { signupRouter } from './routes/signup';
+import {errorHandler} from './middleware/error-handler'
+import {NotFoundError} from './errors/not-found-error'
 
 const app = express();
-// app.use(json());
+app.use(json());
 
-app.get('/api/users/currentuser', (req, res)=>{
-  res.send('Hi there!')
-})
+app.use(currentUserRouter);
+app.use(signinRouter);
+app.use(signoutRouter);
+app.use(signupRouter);
 
-app.listen(3000, ()=> {
-  console.log('Listenning to port 3000!!!!!!!')
-})
+// put this before errorHandler
+app.all('*', async(req, res) => { // "all" includes all methods (get, post....)
+  throw new NotFoundError() ;
+});
+
+app.use(errorHandler);
+
+const start = async() => {
+  try {
+    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth')
+    console.log('Connected to MongoDb')
+  } catch (err) {
+    console.error(err);
+  }
+
+  app.listen(3000, ()=> {
+    console.log('Listenning to port 3000!!')
+  })
+}
+
+start();
+
+
 
