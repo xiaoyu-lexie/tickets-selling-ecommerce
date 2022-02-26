@@ -28,6 +28,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   }
+},
+{
+  toJSON: {
+    transform(doc, ret) {
+      delete ret.password;
+      delete ret.__v;
+      ret.id = ret._id;
+      delete ret._id;
+
+
+    }
+  }
 });
 
 //async function is executed when we want to save a document to database
