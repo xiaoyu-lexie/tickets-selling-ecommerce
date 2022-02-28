@@ -1,5 +1,7 @@
-import express from 'express'
-import {body} from 'express-validator'
+import express, {Request, Response} from 'express';
+import {body} from 'express-validator';
+
+import { validateRequest } from '../middleware/validate-request';
 
 const router = express.Router();
 // app.use(json());
@@ -12,10 +14,10 @@ router.post('/api/users/signin',
   body('password')
     .trim()
     .notEmpty()
-    .withMessage('You must supply a valid password')
+    .withMessage('You must supply a password')
 ],
-(req, res)=>{
-  res.send('Hi there!')
-})
+validateRequest,
+(req: Request, res: Response)=>{
+});
 
 export { router as signinRouter}
