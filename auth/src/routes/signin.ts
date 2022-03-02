@@ -33,7 +33,7 @@ async (req: Request, res: Response)=>{
     existingUser.password,
     password
   );
-  if (!password) {
+  if (!passwordsMatch) {
     throw new BadRequestError('Invalid Email or password')
   }
 
