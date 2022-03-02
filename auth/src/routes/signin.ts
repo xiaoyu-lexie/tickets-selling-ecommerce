@@ -1,7 +1,9 @@
 import express, {Request, Response} from 'express';
 import {body} from 'express-validator';
 
+import {User} from '../models/user';
 import { validateRequest } from '../middleware/validate-request';
+import { BadRequestError } from '../errors/bad-request-error';
 
 const router = express.Router();
 // app.use(json());
@@ -17,7 +19,13 @@ router.post('/api/users/signin',
     .withMessage('You must supply a password')
 ],
 validateRequest,
-(req: Request, res: Response)=>{
+async (req: Request, res: Response)=>{
+  const {email, password} = req.body;
+
+  const existingUser = await User.findOne({email});
+  if (!existingUser) {
+    throw new BadRequestError('Invalid Email or password')
+  }
 });
 
 export { router as signinRouter}
