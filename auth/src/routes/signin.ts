@@ -1,6 +1,8 @@
 import express, {Request, Response} from 'express';
 import {body} from 'express-validator';
+import jwt from 'jsonwebtoken';
 
+import {Password} from '../services/password';
 import {User} from '../models/user';
 import { validateRequest } from '../middleware/validate-request';
 import { BadRequestError } from '../errors/bad-request-error';
@@ -26,6 +28,29 @@ async (req: Request, res: Response)=>{
   if (!existingUser) {
     throw new BadRequestError('Invalid Email or password')
   }
+
+  const passwordsMatch = await Password.compare(
+    existingUser.password,
+    password
+  );
+  if (!password) {
+    throw new BadRequestError('Invalid Email or password')
+  }
+
+  // Generate JWT
+  const userJwt = jwt.sign({
+    id: existingUser.id,
+    email: existingUser.email
+  },
+    process.env.JWT_KEY!
+  )
+
+  //Store it on session object
+  req.session = {
+    jwt: userJwt
+  };
+
+  res.status(200).send(existingUser);
 });
 
 export { router as signinRouter}
