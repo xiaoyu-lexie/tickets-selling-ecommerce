@@ -8,9 +8,24 @@ const LandingPage = ({currentuser}) => {
 };
 
 LandingPage.getInitialProps = async () => {
-  const response = await axios.get('/api/users/currentuser')
+  if (typeof window === 'undefined') {
+    // we are on the server
+    const {data} = await axios.get(
+      'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser', {
+        headers: {
+          Host: 'ticketing.dev'
+        }
+      }
+    );
+    return data;
+  } else {
+    //we are on the client(browser)
+    const {data} = await axios.get('/api/users/currentuser')
+    return data;
+  }
 
-  return response.data;
+
+  return {}
 }
 
 export default LandingPage;
