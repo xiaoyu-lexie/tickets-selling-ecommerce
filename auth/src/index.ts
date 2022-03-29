@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import {app} from './app';
 
 const start = async() => {
-
+  console.log('process.env.JWT_KWYwwww', process.env.JWT_KWY);
   if (!process.env.JWT_KEY) { // we putting the check here is to know the error immediately when we start to deploy code
-    console.log('process.env.JWT_KWYwwww', process.env.JWT_KWY);
+
     throw new Error('JWT_KEY must be defined!')
   }
 

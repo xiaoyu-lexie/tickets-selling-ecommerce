@@ -18,7 +18,7 @@ app.use(
   cookieSession({
     // to disable encryption on this cookie
     signed: false,
-    // to require that cookie will only be used if a user is visiting our app over an HTTP connection
+    // to require that cookie will only be used if a user is visiting our app over an HTTPS connection
     secure: process.env.NODE_ENV !== 'test'
   })
 )

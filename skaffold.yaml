@@ -18,3 +18,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: xiaoyu0330/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
